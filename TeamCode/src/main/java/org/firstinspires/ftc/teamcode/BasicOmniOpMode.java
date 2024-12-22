@@ -83,12 +83,12 @@ public class BasicOmniOpMode extends LinearOpMode {
 
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
-        leftFrontDrive  = hardwareMap.get(DcMotor.class, "frontLeft");
-        leftBackDrive  = hardwareMap.get(DcMotor.class, "backLeft");
+        leftFrontDrive = hardwareMap.get(DcMotor.class, "frontLeft");
+        leftBackDrive = hardwareMap.get(DcMotor.class, "backLeft");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "frontRight");
         rightBackDrive = hardwareMap.get(DcMotor.class, "backRight");
 
-        winch   = hardwareMap.get(DcMotor.class, "singleMotor");
+        winch = hardwareMap.get(DcMotor.class, "singleMotor");
         sliderail = hardwareMap.get(DcMotor.class, "sliderail");
 
         // ########################################################################################
@@ -113,7 +113,6 @@ public class BasicOmniOpMode extends LinearOpMode {
         sliderail.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
-
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -130,16 +129,16 @@ public class BasicOmniOpMode extends LinearOpMode {
             double max;
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-            double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
-            double lateral =  gamepad1.left_stick_x;
-            double yaw     =  gamepad1.right_stick_x;
+            double axial = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
+            double lateral = -gamepad1.left_stick_x;
+            double yaw = gamepad1.right_stick_x;
 
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
-            double leftFrontPower  = axial + lateral + yaw;
+            double leftFrontPower = axial + lateral + yaw;
             double rightFrontPower = axial - lateral - yaw;
-            double leftBackPower   = axial - lateral + yaw;
-            double rightBackPower  = axial + lateral - yaw;
+            double leftBackPower = axial - lateral + yaw;
+            double rightBackPower = axial + lateral - yaw;
 
             // Normalize the values so no wheel power exceeds 100%
             // This ensures that the robot maintains the desired motion.
@@ -148,10 +147,10 @@ public class BasicOmniOpMode extends LinearOpMode {
             max = Math.max(max, Math.abs(rightBackPower));
 
             if (max > 1.0) {
-                leftFrontPower  /= max;
+                leftFrontPower /= max;
                 rightFrontPower /= max;
-                leftBackPower   /= max;
-                rightBackPower  /= max;
+                leftBackPower /= max;
+                rightBackPower /= max;
             }
 
             // This is test code:
@@ -178,41 +177,39 @@ public class BasicOmniOpMode extends LinearOpMode {
             rightBackDrive.setPower(rightBackPower);
 
             double winchPos = winch.getCurrentPosition();  //this gets the current position of the motor from the encoder
+
+            double CPR = 537.7;
+
+            // Get the current angle of the winch
+            double winchAngle = -(((winchPos / CPR) * 360) % 360); //no mod so that it can go below 0
+
+            //gets the current distance of the sliderail from initialization point
             double sliderailPos = sliderail.getCurrentPosition();
+            double circumference = Math.PI * 1.5; //1.5 is the spool diameter in INCHES
+            // Get the current distance from base.
+            double sliderailDistance = (sliderailPos / CPR) * circumference;
 
             boolean encoderBlock = true;
 
-            if (gamepad1.a) {
-                winch.setPower(speed);
-            }
-            else if (gamepad1.b) {
-                winch.setPower(-speed);
-            }
-
-            else if (gamepad1.x) {
-                speed += 0.001;
-            }
-            else if (gamepad1.y) {
-                speed -= 0.001;
-            }
-            else {
-                winch.setPower(0);
-            }
-
             if (gamepad1.left_bumper) { //when bumper is held down, the encoder block doesn't work. Otherwise it works.
                 encoderBlock = false;
-            }
-            else {
+            } else {
                 encoderBlock = true;
             }
 
-            if (gamepad1.dpad_up & (sliderailPos >= -2100 || encoderBlock == false)) { // "\\" means or
+            if ((gamepad1.a) & ((winchPos >= -2000) || (encoderBlock = false))) { //UP IS NEGATIVE ON THE WINCH
+                winch.setPower(-speed);
+            } else if (gamepad1.b) {
+                winch.setPower(speed);
+            } else {
+                winch.setPower(0);
+            }
+
+            if (gamepad1.dpad_up & ((sliderailPos >= -2100) || (encoderBlock = false))) { // "\\" means or
                 sliderailPower = -0.5;
-            }
-            else if (gamepad1.dpad_down & (sliderailPos <= -100 || encoderBlock == false)) {
+            } else if (gamepad1.dpad_down & ((sliderailPos <= -100) || (encoderBlock = true))) {
                 sliderailPower = 0.5;
-            }
-            else {
+            } else {
                 sliderailPower = 0;
             }
 
@@ -226,9 +223,11 @@ public class BasicOmniOpMode extends LinearOpMode {
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
             telemetry.addData("Winch position: ", winchPos); //sends winch and sliderail position to the driver (for testing)
-            telemetry.addData("Sliderail position: ", sliderailPos);
+            telemetry.addData("Sliderail distance: ", sliderailDistance);
+            telemetry.addData("Winch Angle", winchAngle);
             telemetry.update();
 
 
         }
-    }}
+    }
+}
