@@ -64,27 +64,27 @@ public final class MecanumDrive {
 
         // drive model parameters
         public double inPerTick = 0.022703437; //based on ForwardPushTest
-        public double lateralInPerTick = 0.0237915105; //filled in based on LateralPushTest
+        public double lateralInPerTick = 0.0246460522; //filled in based on averaged LateralPushTest with Ethan
         public double trackWidthTicks = 1369.7320311052747; //filled in based on AngularRampLogger
 
         // feedforward parameters (in tick units)
         public double kS = 1.2442137527674344; //filled in based on AngularRampLogger
         public double kV = 0.004105038542326312; //filled in based on AngularRampLogger
-        public double kA = 0.0005; //determined with manual feedforward tuner but NOT FINISHED
+        public double kA = 0.0003; //We just picked one and went with it, but will probably revisit later
 
         // path profile parameters (in inches)
         public double maxWheelVel = 50;
-        public double minProfileAccel = -30;
+        public double minProfileAccel = -50;
         public double maxProfileAccel = 50;
 
         // turn profile parameters (in radians)
         public double maxAngVel = Math.PI; // shared with path
         public double maxAngAccel = Math.PI;
 
-        // path controller gains
-        public double axialGain = 0.0;
-        public double lateralGain = 0.0;
-        public double headingGain = 0.0; // shared with turn
+        // path controller gains based on ManualFeedbackTuner. These are used to determine how much power is used to correct when robot goes off path.
+        public double axialGain = 6;
+        public double lateralGain = 4;
+        public double headingGain = 4; // shared with turn
 
         public double axialVelGain = 0.0;
         public double lateralVelGain = 0.0;
