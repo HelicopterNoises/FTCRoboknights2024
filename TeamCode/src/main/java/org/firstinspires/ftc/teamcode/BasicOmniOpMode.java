@@ -1,5 +1,4 @@
 package teamcode;
-
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -49,6 +48,8 @@ public class BasicOmniOpMode extends LinearOpMode {
     private DcMotor winch = null;
     private DcMotor sliderail = null;
 
+    private Servo claw = null;
+
     @Override
     public void runOpMode() {
 
@@ -58,6 +59,8 @@ public class BasicOmniOpMode extends LinearOpMode {
         leftBackDrive = hardwareMap.get(DcMotor.class, "backLeft");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "frontRight");
         rightBackDrive = hardwareMap.get(DcMotor.class, "backRight");
+        claw = hardwareMap.get(Servo.class, "claw");  
+
 
         winch = hardwareMap.get(DcMotor.class, "singleMotor");
         sliderail = hardwareMap.get(DcMotor.class, "sliderail");
@@ -86,11 +89,15 @@ public class BasicOmniOpMode extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
+    
         telemetry.update();
         double speed = 0.6;//EH Slot 0
         double sliderailPower = 0.0;
         double targetposition = 0.0;
         boolean slideLock = false;
+        double pos = 0;
+        boolean buttonApressed = false;
+        int Apress = 0;
 
 
         waitForStart();
@@ -213,6 +220,32 @@ public class BasicOmniOpMode extends LinearOpMode {
             else {
                 telemetry.addData("EncoderBlock (disable w/ left bumper): ", encoderBlock);
             }
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++            Start of Claw                               ++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        
+    if (gamepad1.right_bumper) {
+        if (buttonApressed == false) {
+            Apress = Apress + 1;
+        if((Apress%2)== 0){
+            pos = 0.0;
+            claw.setPosition(pos);
+        }
+        else {
+            pos = 0.038;
+            claw.setPosition(pos);
+        }
+            buttonApressed = true;
+        }
+    }
+    else{
+        buttonApressed = false;
+    }
+    telemetry.addData("StatusPos", pos);
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++           end of Claw                                  ++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
