@@ -1,8 +1,24 @@
 package org.firstinspires.ftc.teamcode;
+
+import androidx.annotation.NonNull;
+
+// RR-specific imports
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.Trajectory;
+import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.ftc.Actions;
+
+// Non-RR imports
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import org.firstinspires.ftc.teamcode.MecanumDrive;
+
 public class PreProdPathing extends LinearOpMode {
     @Override
     public void runOpMode() {
@@ -23,7 +39,7 @@ public class PreProdPathing extends LinearOpMode {
         Trajectory traj = drive.trajectoryBuilder(new Pose2d())
         .splineTo(new Vector2d(x1, y1), heading)
         .splineTo(new Vector2d(x2, y2), heading)
-        splineTo(new Vector2d(x3, y3), heading)
+        .splineTo(new Vector2d(x3, y3), heading)
         .splineTo(new Vector2d(x4, y4), heading)
         .build();
       
