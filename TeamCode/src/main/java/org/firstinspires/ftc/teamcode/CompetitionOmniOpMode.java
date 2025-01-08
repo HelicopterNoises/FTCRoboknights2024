@@ -5,6 +5,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
+
+
 
 /*
  * This file contains an example of a Linear "OpMode".
@@ -34,9 +42,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@TeleOp(name="2025 Test Omni Op Mode", group="Linear OpMode")
-@Disabled
-public class BasicOmniOpMode extends LinearOpMode {
+@TeleOp(name="2025 Comp Op Mode", group="Linear OpMode")
+
+public class CompetitionOmniOpMode extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
@@ -59,7 +67,7 @@ public class BasicOmniOpMode extends LinearOpMode {
         leftBackDrive = hardwareMap.get(DcMotor.class, "backLeft");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "frontRight");
         rightBackDrive = hardwareMap.get(DcMotor.class, "backRight");
-        claw = hardwareMap.get(Servo.class, "claw");  
+        claw = hardwareMap.get(Servo.class, "claw");
 
 
         winch = hardwareMap.get(DcMotor.class, "singleMotor");
@@ -89,7 +97,7 @@ public class BasicOmniOpMode extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
-    
+
         telemetry.update();
         double speed = 0.6;//EH Slot 0
         double sliderailPower = 0.0;
@@ -170,15 +178,15 @@ public class BasicOmniOpMode extends LinearOpMode {
 
             boolean encoderBlock = true;
 
-            if (gamepad1.left_bumper) { //when bumper is held down, the encoder block doesn't work. Otherwise it works.
+            if (gamepad2.left_bumper) { //when bumper is held down, the encoder block doesn't work. Otherwise it works.
                 encoderBlock = false;
             } else {
                 encoderBlock = true;
             }
 
-            if ((gamepad1.a) & ((winchPos >= -2000) || (encoderBlock = false))) { //UP IS NEGATIVE ON THE WINCH
+            if ((gamepad2.a) & ((winchPos >= -2000) || (encoderBlock = false))) { //UP IS NEGATIVE ON THE WINCH
                 winch.setPower(-speed);
-            } else if (gamepad1.b) {
+            } else if (gamepad2.b) {
                 winch.setPower(speed);
             } else {
                 winch.setPower(0);
@@ -186,18 +194,18 @@ public class BasicOmniOpMode extends LinearOpMode {
 
             //The following code is Sliderail controls with encoder blockers and SlideLock, which ensures the sliderail doesn't fall when extended, even at high angles
             //Slidelock is not good for the motor so it is minimized as much as possible
-            if (gamepad1.dpad_up & ((sliderailPos >= -2100) || (encoderBlock = false))) { //Raises sliderail, but does not allow overextension IF enabled (disabled via left bumper)
+            if (gamepad2.dpad_up & ((sliderailPos >= -2100) || (encoderBlock = false))) { //Raises sliderail, but does not allow overextension IF enabled (disabled via left bumper)
                 sliderail.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 sliderailPower = -0.5;
                 targetposition = sliderail.getCurrentPosition(); //This creates a variable so IF the sliderail falls, there will be a mismatch, and the sliderail will move back and hold its position
                 slideLock = true;
             }
-            else if (gamepad1.dpad_down) {
+            else if (gamepad2.dpad_down) {
                 sliderail.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 sliderailPower = 0.3;
                 targetposition = sliderail.getCurrentPosition();
             }
-            else if (gamepad1.dpad_right){ //press to manually disable slidelock after each extension if not needed to preserve motor
+            else if (gamepad2.dpad_right){ //press to manually disable slidelock after each extension if not needed to preserve motor
                 slideLock = false;
                 targetposition = sliderail.getCurrentPosition();
                 sliderailPower = 0;
@@ -224,25 +232,25 @@ public class BasicOmniOpMode extends LinearOpMode {
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++            Start of Claw                               ++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        
-    if (gamepad1.right_bumper) {
-        if (buttonApressed == false) {
-            Apress = Apress + 1;
-        if((Apress%2)== 0){
-            pos = 0.0;
-            claw.setPosition(pos);
-        }
-        else {
-            pos = 0.038;
-            claw.setPosition(pos);
-        }
-            buttonApressed = true;
-        }
-    }
-    else{
-        buttonApressed = false;
-    }
-    telemetry.addData("StatusPos", pos);
+
+            if (gamepad2.right_bumper) {
+                if (buttonApressed == false) {
+                    Apress = Apress + 1;
+                    if((Apress%2)== 0){
+                        pos = 0.0;
+                        claw.setPosition(pos);
+                    }
+                    else {
+                        pos = 0.038;
+                        claw.setPosition(pos);
+                    }
+                    buttonApressed = true;
+                }
+            }
+            else{
+                buttonApressed = false;
+            }
+            telemetry.addData("StatusPos", pos);
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++           end of Claw                                  ++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
