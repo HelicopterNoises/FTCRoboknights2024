@@ -58,9 +58,9 @@ public final class MecanumDrive {
         // DONE: fill in these values based on
         //   see https://ftc-docs.firstinspires.org/en/latest/programming_resources/imu/imu.html?highlight=imu#physical-hub-mounting
         public RevHubOrientationOnRobot.LogoFacingDirection logoFacingDirection =
-                RevHubOrientationOnRobot.LogoFacingDirection.FORWARD;
+                RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
         public RevHubOrientationOnRobot.UsbFacingDirection usbFacingDirection =
-                RevHubOrientationOnRobot.UsbFacingDirection.LEFT;
+                RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
 
         // drive model parameters
         public double inPerTick = 0.022703437; //based on ForwardPushTest
@@ -141,6 +141,8 @@ public final class MecanumDrive {
             // DONE: reverse encoders if needed
                leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
                leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
+               //rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
+
 
         }
 
@@ -232,6 +234,7 @@ public final class MecanumDrive {
         // DONE: reverse motor directions if needed
            leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
            leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
+           rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         // DONE, is default: make sure your config has an IMU with this name (can be BNO or BHI)
