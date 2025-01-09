@@ -22,17 +22,21 @@ import com.qualcomm.robotcore.hardware.Servo;
 @Autonomous(name = "BLUE_TEST_AUTO_PIXEL", group = "Autonomous")
 public class BlueSideTestAuto extends LinearOpMode {
 
-    public class sliderail{
+    //public class lift{
       //Build slide rail public class, it shoudl proably extend and lift up in one motion
         // cedric you understand the slide rail better so coud you pls build this follow similar
             // out put mehtod dividing the entire thing into two actions that are extned and raise, and
                 // lower and contract
                     // if we get into one fluid motion with the correct timing we wont need slide lock in theory, but we may
                         //idealy using the lift varible do that we have to revise less code
+        // pickup action
+            // down and neutral
+        //drop off action
+            // extened and retract
 
-    }
+   // }
     public class Claw {
-        private Servo claw;3
+        private Servo claw;
 
         public Claw(HardwareMap hardwareMap) {
             claw = hardwareMap.get(Servo.class, "claw");
@@ -66,7 +70,7 @@ public class BlueSideTestAuto extends LinearOpMode {
         Pose2d initialPose = new Pose2d(11.8, 61.7, Math.toRadians(90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
         Claw claw = new Claw(hardwareMap);
-        Lift lift = new Lift(hardwareMap);
+        //Lift lift = new Lift(hardwareMap);
 
         // vision here that outputs position
         int visionOutputPosition = 1;
@@ -128,9 +132,9 @@ public class BlueSideTestAuto extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         trajectoryActionChosen,
-                        lift.liftUp(),
+                        //lift.liftUp(),
                         claw.openClaw(),
-                        lift.liftDown(),
+                       // lift.liftDown(),
                         trajectoryActionCloseOut
                 )
         );
