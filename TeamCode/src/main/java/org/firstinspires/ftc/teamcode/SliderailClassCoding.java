@@ -26,8 +26,9 @@ public class SliderailClassCoding extends LinearOpMode {
 
         public Lift(HardwareMap hardwareMap) {
             lift = hardwareMap.get(DcMotorEx.class, "sliderail");
+            lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //sets up the encoders, "zeroes". it
             lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            lift.setDirection(DcMotorSimple.Direction.FORWARD);
+            lift.setDirection(DcMotorSimple.Direction.REVERSE);
         }
         public class LiftUp implements Action {
             private boolean initialized = false;
@@ -35,15 +36,21 @@ public class SliderailClassCoding extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 if (!initialized) {
-                    lift.setPower(-0.5);
+                    lift.setPower(0.5);
                     initialized = true;
                 }
 
                 double pos = lift.getCurrentPosition();
                 packet.put("liftPos", pos);
-                if (pos <= -2100.0) {
+                telemetry.addData("sliderail position", pos);
+                        telemetry.update();
+                if (pos < 2100.0) {
+                    telemetry.addData("returns true", pos);
+                    telemetry.update();
                     return true;
                 } else {
+                    telemetry.addData("returns false", pos);
+                    telemetry.update();
                     lift.setPower(0);
                     return false;
                 }
@@ -60,16 +67,22 @@ public class SliderailClassCoding extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 if (!initialized) {
-                    lift.setPower(-0.3);
+                    lift.setPower(0.3);
                     initialized = true;
                 }
 
                 double pos = lift.getCurrentPosition();
                 packet.put("liftPos", pos);
-                if (pos > -100.0) {
+                telemetry.addData("sliderail position", pos);
+                telemetry.update();
+                if (pos > 100.0) {
+                    telemetry.addData("returns true", pos);
+                    telemetry.update();
                     return true;
                 } else {
                     lift.setPower(0);
+                    telemetry.addData("returns false", pos);
+                    telemetry.update();
                     return false;
                 }
             }
