@@ -29,7 +29,6 @@ public class SliderailClassCoding extends LinearOpMode {
             lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             lift.setDirection(DcMotorSimple.Direction.FORWARD);
         }
-
         public class LiftUp implements Action {
             private boolean initialized = false;
 
@@ -50,9 +49,10 @@ public class SliderailClassCoding extends LinearOpMode {
                 }
             }
         }
-        public Action liftUp() {
+        public Action liftUp()
+            {
             return new LiftUp();
-        }
+            }
 
         public class LiftDown implements Action {
             private boolean initialized = false;
@@ -60,7 +60,7 @@ public class SliderailClassCoding extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 if (!initialized) {
-                    lift.setPower(0.3);
+                    lift.setPower(-0.3);
                     initialized = true;
                 }
 
@@ -174,11 +174,11 @@ public class SliderailClassCoding extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        trajectoryActionChosen,
+                        //trajectoryActionChosen,
                         lift.liftUp(),
                         claw.openClaw(),
-                        lift.liftDown(),
-                        trajectoryActionCloseOut
+                        lift.liftDown()
+                        //trajectoryActionCloseOut
                 )
         );
     }

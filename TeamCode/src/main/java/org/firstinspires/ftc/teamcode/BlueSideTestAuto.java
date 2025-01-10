@@ -22,7 +22,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 @Autonomous(name = "Test Auto w/ RRPathGen Spline", group = "Autonomous")
 public class BlueSideTestAuto extends LinearOpMode {
 
-    public class sliderail{
+    public class lift{
       //Build slide rail public class, it shoudl proably extend and lift up in one motion
         // cedric you understand the slide rail better so coud you pls build this follow similar
             // out put mehtod dividing the entire thing into two actions that are extned and raise, and
