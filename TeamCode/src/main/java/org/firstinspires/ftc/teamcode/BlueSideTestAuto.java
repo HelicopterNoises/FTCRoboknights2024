@@ -14,35 +14,29 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 
-
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-
 @Config
-@Autonomous(name = "Test Auto w/ RRPathGen Spline", group = "Autonomous")
+@Autonomous(name = "BLUE_TEST_AUTO_PIXEL", group = "Autonomous")
 public class BlueSideTestAuto extends LinearOpMode {
 
-
     public class sliderail{
-        //Build slide rail public class, it shoudl proably extend and lift up in one motion
+      //Build slide rail public class, it shoudl proably extend and lift up in one motion
         // cedric you understand the slide rail better so coud you pls build this follow similar
-        // out put mehtod dividing the entire thing into two actions that are extned and raise, and
-        // lower and contract
-        // if we get into one fluid motion with the correct timing we wont need slide lock in theory, but we may
-        //idealy using the lift varible do that we have to revise less code
-
+            // out put mehtod dividing the entire thing into two actions that are extned and raise, and
+                // lower and contract
+                    // if we get into one fluid motion with the correct timing we wont need slide lock in theory, but we may
+                        //idealy using the lift varible do that we have to revise less code
 
     }
     public class Claw {
-        private Servo claw;
-
+        private Servo claw;3
 
         public Claw(HardwareMap hardwareMap) {
             claw = hardwareMap.get(Servo.class, "claw");
         }
-
 
         public class CloseClaw implements Action {
             @Override
@@ -54,7 +48,6 @@ public class BlueSideTestAuto extends LinearOpMode {
         public Action closeClaw() {
             return new CloseClaw();
         }
-
 
         public class OpenClaw implements Action {
             @Override
@@ -68,73 +61,46 @@ public class BlueSideTestAuto extends LinearOpMode {
         }
     }
 
-
     @Override
     public void runOpMode() {
-        Pose2d beginPose = new Pose2d(-58.42, -57.55, Math.toRadians(0.00));
-        MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
+        Pose2d initialPose = new Pose2d(11.8, 61.7, Math.toRadians(90));
+        MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
         Claw claw = new Claw(hardwareMap);
-        //Lift lift = new Lift(hardwareMap);
-
+        Lift lift = new Lift(hardwareMap);
 
         // vision here that outputs position
         int visionOutputPosition = 1;
 
-
-       /*TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
-               .lineToYSplineHeading(33, Math.toRadians(0))
-               .waitSeconds(2)
-               .setTangent(Math.toRadians(90))
-               .lineToY(48)
-               .setTangent(Math.toRadians(0))
-               .lineToX(32)
-               .strafeTo(new Vector2d(44.5, 30))
-               .turn(Math.toRadians(180))
-               .lineToX(47.5)
-               .waitSeconds(3);
-
-
-       TrajectoryActionBuilder tab2 = drive.actionBuilder(initialPose)
-               .lineToY(37)
-               .setTangent(Math.toRadians(0))
-               .lineToX(18)
-               .waitSeconds(3)
-               .setTangent(Math.toRadians(0))
-               .lineToXSplineHeading(46, Math.toRadians(180))
-               .waitSeconds(3);
-       TrajectoryActionBuilder tab3 = drive.actionBuilder(initialPose)
-               .lineToYSplineHeading(33, Math.toRadians(180))
-               .waitSeconds(2)
-               .strafeTo(new Vector2d(46, 30))
-               .waitSeconds(3);
-       Action trajectoryActionCloseOut = tab1.endTrajectory().fresh()
-               .strafeTo(new Vector2d(48, 12))
-               .build();
-
-
-        */
-
-
-        Actions.runBlocking(
-                drive.actionBuilder(beginPose)
-                        .splineTo(new Vector2d(6.70, -53.54), Math.toRadians(7.75))
-                        .splineTo(new Vector2d(-2.35, -26.38), Math.toRadians(172.53))
-                        .splineTo(new Vector2d(-59.81, -23.59), Math.toRadians(177.22))
-                        .build());
-        //.splineTo(new Vector2d(-36, 0), Math.PI);
-
-
-
-
-        //.build();
-
-
-
+        TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
+                .lineToYSplineHeading(33, Math.toRadians(0))
+                .waitSeconds(2)
+                .setTangent(Math.toRadians(90))
+                .lineToY(48)
+                .setTangent(Math.toRadians(0))
+                .lineToX(32)
+                .strafeTo(new Vector2d(44.5, 30))
+                .turn(Math.toRadians(180))
+                .lineToX(47.5)
+                .waitSeconds(3);
+        TrajectoryActionBuilder tab2 = drive.actionBuilder(initialPose)
+                .lineToY(37)
+                .setTangent(Math.toRadians(0))
+                .lineToX(18)
+                .waitSeconds(3)
+                .setTangent(Math.toRadians(0))
+                .lineToXSplineHeading(46, Math.toRadians(180))
+                .waitSeconds(3);
+        TrajectoryActionBuilder tab3 = drive.actionBuilder(initialPose)
+                .lineToYSplineHeading(33, Math.toRadians(180))
+                .waitSeconds(2)
+                .strafeTo(new Vector2d(46, 30))
+                .waitSeconds(3);
+        Action trajectoryActionCloseOut = tab1.endTrajectory().fresh()
+                .strafeTo(new Vector2d(48, 12))
+                .build();
 
         // actions that need to happen on init; for instance, a claw tightening.
         Actions.runBlocking(claw.closeClaw());
-
-
 
 
         while (!isStopRequested() && !opModeIsActive()) {
@@ -143,28 +109,23 @@ public class BlueSideTestAuto extends LinearOpMode {
             telemetry.update();
         }
 
-
         int startPosition = visionOutputPosition;
         telemetry.addData("Starting Position", startPosition);
         telemetry.update();
         waitForStart();
 
-
         if (isStopRequested()) return;
 
-
         Action trajectoryActionChosen;
-        /*if (startPosition == 1) {
+        if (startPosition == 1) {
             trajectoryActionChosen = tab1.build();
         } else if (startPosition == 2) {
             trajectoryActionChosen = tab2.build();
         } else {
             trajectoryActionChosen = tab3.build();
         }
-         */
 
-
-        /*Actions.runBlocking(
+        Actions.runBlocking(
                 new SequentialAction(
                         trajectoryActionChosen,
                         lift.liftUp(),
@@ -172,7 +133,6 @@ public class BlueSideTestAuto extends LinearOpMode {
                         lift.liftDown(),
                         trajectoryActionCloseOut
                 )
-        );*/
+        );
     }
 }
-
