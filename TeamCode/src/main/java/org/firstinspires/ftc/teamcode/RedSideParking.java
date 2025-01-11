@@ -4,27 +4,23 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import org.firstinspires.ftc.teamcode.MecanumDrive;
 
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Config
-@Autonomous(name = "Test Auto w/ RRPathGen Spline", group = "Autonomous")
-public class BlueSideTestAuto extends LinearOpMode {
+@Autonomous(name = "Red Parking: Observation Side", group = "Autonomous")
+public class RedSideParking extends LinearOpMode {
 
     public class lift{
       //Build slide rail public class, it shoudl proably extend and lift up in one motion
         // cedric you understand the slide rail better so coud you pls build this follow similar
+
+
             // out put mehtod dividing the entire thing into two actions that are extned and raise, and
                 // lower and contract
                     // if we get into one fluid motion with the correct timing we wont need slide lock in theory, but we may
@@ -63,7 +59,7 @@ public class BlueSideTestAuto extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        Pose2d beginPose = new Pose2d(-58.42, -57.55, Math.toRadians(0.00));
+        Pose2d beginPose = new Pose2d(11.41, -62.87, Math.toRadians(90.00));
         MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
         Claw claw = new Claw(hardwareMap);
         //Lift lift = new Lift(hardwareMap);
@@ -102,12 +98,11 @@ public class BlueSideTestAuto extends LinearOpMode {
 
          */
 
-        Actions.runBlocking(
+        /*Actions.runBlocking(
                 drive.actionBuilder(beginPose)
-                        .splineTo(new Vector2d(6.70, -53.54), Math.toRadians(7.75))
-                        .splineTo(new Vector2d(-2.35, -26.38), Math.toRadians(172.53))
-                        .splineTo(new Vector2d(-59.81, -23.59), Math.toRadians(177.22))
-                        .build());
+                        .waitSeconds(10)
+                        .splineTo(new Vector2d(59.00, -59.00), Math.toRadians(0.00))
+                        .build()); */
 
                 //.splineTo(new Vector2d(-36, 0), Math.PI);
 
@@ -116,7 +111,7 @@ public class BlueSideTestAuto extends LinearOpMode {
 
 
         // actions that need to happen on init; for instance, a claw tightening.
-        Actions.runBlocking(claw.closeClaw());
+        //Actions.runBlocking(claw.closeClaw());
 
 
         while (!isStopRequested() && !opModeIsActive()) {
@@ -131,6 +126,12 @@ public class BlueSideTestAuto extends LinearOpMode {
         waitForStart();
 
         if (isStopRequested()) return;
+
+        Actions.runBlocking(
+                drive.actionBuilder(beginPose)
+                        .waitSeconds(10)
+                        .splineTo(new Vector2d(59.00, -59.00), Math.toRadians(0.00))
+                        .build());
 
         /*
         Action trajectoryActionChosen;
